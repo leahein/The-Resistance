@@ -1,5 +1,5 @@
 from typing import List, FrozenSet
-from random import shuffle
+import random
 from . import constants
 from .player import Player
 
@@ -14,24 +14,35 @@ class Game:
             with_merlin: bool = True) -> None:
         self.id = id
         self.player_names = player_names.split(',')
-        self.n_players = len(player_names)
-        self._players = None # type: Optional[List[Player]]
+        self.seed = random.random()
+        self._spies = None # type: Optional[List[Player]]
+        self._resistance = None # type: Optional[List[Player]]
         self.all[self.id] = self
 
-    def teams(self):
-        spy_team_size = int(len(player_names) / 3)
+    @property
+    def n_players(self):
+        return len(self.players)
 
+    @property
+    def n_spies(self) -> int:
+        return int(self.n_players / 3)
+
+    def _players_shuffled(self):
+        return shuffle(self.player_names)
 
     def team_names(self) -> FrozenSet[str]:
         return constants.TEAM_NAMES
 
     @property
-    def players(player_names: List[str]) ->
+    def players(player_names: List[str]) -> List[Player]:
         if self._players is None:
-            players = players
+            players =
+            spies = [Player(name=name, game=self, team=constants.SPIES)
+                players[0: self.n_spies]
+            resistance = players[self.n_spies: -1]
             self.players = [
-                Player(name=name, game=self)
-                for name in shuffle(self.player_names)
+                Player(name=name, game=self, team=)
+                for name in
             ]
         return self.players
 
