@@ -1,13 +1,20 @@
-from typing import List, FrozenSet, Dict, Optional
+from typing import List, FrozenSet, Dict, NamedTuple, Optional
 from random import shuffle
 from . import constants
-from .player import Player
 
 def _players_shuffled(player_names: str) -> List[str]:
-    split_names = player_names.split(',')
+    split_names = player_names.split(', ')
     shuffle(split_names)
     return split_names
 
+
+class Player(NamedTuple):
+    '''Container representing a player in the game'''
+
+    name: str
+    game: 'Game'
+    team: str
+    is_merlin: bool = False
 
 class Game:
 
@@ -47,9 +54,9 @@ class Game:
                 for name in self.player_names[self.n_spies:-2]
             ]
             merlin = [Player(
-                name=self.player_names[-1], 
-                game=self, 
-                team=constants.RESISTANCE, 
+                name=self.player_names[-1],
+                game=self,
+                team=constants.RESISTANCE,
                 is_merlin=True
             )]
             self._resistance = resistance + merlin
