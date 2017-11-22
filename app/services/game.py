@@ -18,8 +18,6 @@ class Player(NamedTuple):
 
 class Game:
 
-    all = {} # type: Dict[int, 'Game']
-
     def __init__(
             self,
             id: int,
@@ -29,7 +27,6 @@ class Game:
         self.player_names = _players_shuffled(player_names)
         self._spies = None # type: Optional[List[Player]]
         self._resistance = None # type: Optional[List[Player]]
-        self.all[self.id] = self
 
     @property
     def n_players(self) -> int:
@@ -37,6 +34,7 @@ class Game:
 
     @property
     def n_spies(self) -> int:
+        '''round up number of spies if players not divisible by 0'''
         third = int(self.n_players / 3)
         return int(third + 1) if self.n_players % 3 else third
 
@@ -71,7 +69,3 @@ class Game:
                 for name in self.player_names[0: self.n_spies]
             ]
         return self._spies
-
-
-    def destroy(self) -> None:
-        del self.all[self.id]
