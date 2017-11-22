@@ -37,7 +37,8 @@ class Game:
 
     @property
     def n_spies(self) -> int:
-        return int(self.n_players / 3)
+        third = int(self.n_players / 3)
+        return int(third + 1) if self.n_players % 3 else third
 
     def team_names(self) -> FrozenSet[str]:
         return constants.TEAM_NAMES
