@@ -1,12 +1,10 @@
 from typing import List, FrozenSet, Dict, NamedTuple, Optional
-from random import shuffle
+import random
+
 from . import constants
 
-def _players_shuffled(player_names: str) -> List[str]:
-    split_names = player_names.split(', ')
-    shuffle(split_names)
-    return split_names
-
+class PlayerInfo(NamedTuple):
+    pass
 
 class Player(NamedTuple):
     '''Container representing a player in the game'''
@@ -21,10 +19,11 @@ class Game:
     def __init__(
             self,
             id: int,
-            player_names: str,
-            with_merlin: bool = True) -> None:
+            player_names: List[str],
+            with_merlin: bool = True
+    ) -> None:
         self.id = id
-        self.player_names = _players_shuffled(player_names)
+        self.player_names = random.sample(player_names, k=len(player_names))
         self._spies = None # type: Optional[List[Player]]
         self._resistance = None # type: Optional[List[Player]]
 
