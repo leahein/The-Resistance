@@ -1,6 +1,6 @@
 from botocore.client import BaseClient
 
-class MessageSender:
+class SNS:
 
     def __init__(self, sns_client: BaseClient) -> None:
         self.sns_client = sns_client

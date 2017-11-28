@@ -1,6 +1,8 @@
 import os
 
 import yaml
+import boto3
+
 from .services.google_sheet import google_sheet_client
 
 ######################################################################
@@ -28,3 +30,4 @@ GS_BOOK_CODE = SECURE_CONFIG['google_sheet']['book_code']
 ######################################################################
 
 GS_CLIENT = google_sheet_client(PATH_GOOGLE_SHEETS_SECURE)
+SNS_CLIENT = boto3.client(**AWS)
