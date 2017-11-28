@@ -9,13 +9,13 @@ from gspread.client import Client  # type: ignore # pylint: disable=unused-impor
 from oauth2client.service_account import ServiceAccountCredentials # type: ignore
 from oauth2client.crypt import Signer  # type: ignore
 
-SCOPES = ('https://spreadsheets.google.com/feeds')
+SCOPES = ['https://spreadsheets.google.com/feeds']
 
 def google_sheet_client(credentials_filename: str) -> Client:
     '''Establish connection to client'''
     credentials = ServiceAccountCredentials.from_json_keyfile_name(
             filename=credentials_filename,
-            scopes=list(SCOPES),
+            scopes=SCOPES,
         )
     return gspread.authorize(credentials)
 
