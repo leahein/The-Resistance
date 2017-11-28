@@ -31,18 +31,18 @@ def create():
     if form.validate_on_submit():
         game = Game(
             id=,
-            player_names=form.players, 
+            player_names=form.players,
             with_merlin=form.with_merlin,
         )
         sns = SNS(config.SNS_CLIENT)
         for player in game.resistance:
             sns.send(
-                phone=player.phone, 
-                message=(constants.MERLIN_MESSAGE 
-                         if player.is_merlin else 
+                phone=player.phone,
+                message=(constants.MERLIN_MESSAGE
+                         if player.is_merlin else
                          constants.RESISTANCE_MESSAGE)
         for player in game.spies:
             sns.send(
-                phone=player.phone, 
-                message=constants.SPY_MESSAGE 
+                phone=player.phone,
+                message=constants.SPY_MESSAGE
             )

@@ -14,7 +14,6 @@ PATH_INSTANCE = os.path.join(PATH_ROOT, 'instance')
 PATH_SECURE = os.path.join(PATH_INSTANCE, 'secure.yaml')
 PATH_GOOGLE_SHEETS_SECURE = os.path.join(PATH_INSTANCE, 'google-sheets.json')
 
-
 ######################################################################
 # Secure Credentials
 ######################################################################
