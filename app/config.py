@@ -1,7 +1,7 @@
 import os
 
 import yaml
-from services.google_sheet import google_sheet_client
+from .services.google_sheet import google_sheet_client
 
 ######################################################################
 # Paths
@@ -21,7 +21,7 @@ with open(PATH_SECURE, 'r') as PATH_SECURE_FILE_OBJ:
     SECURE_CONFIG = yaml.load(PATH_SECURE_FILE_OBJ.read())
 
 AWS = SECURE_CONFIG['aws']
-GS_BOOK_CODE = GS_BOOK_CODE['google_sheet']['book_code']
+GS_BOOK_CODE = SECURE_CONFIG['google_sheet']['book_code']
 
 ######################################################################
 # Clients

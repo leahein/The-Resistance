@@ -1,10 +1,12 @@
 <html>
   <head>
     <title>game</title>
-    {% for player in players %}
-      {{player}}
+      <form action={{ url_for('create') }} method="post" name="create">
+            {{ form.hidden_tag() }}
+            <div>
+              {{ form.players }}
+              </div>
+            <p><input type="submit" value="Start Game!"></p>
+        </form>
   </head>
-  <body>
-      <h1></h1>
-  </body>
 </html>
