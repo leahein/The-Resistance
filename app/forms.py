@@ -1,6 +1,11 @@
 from flask_wtf import Form
-from wtforms import SelectMultipleField
+from wtforms import SelectMultipleField, BooleanField
 from wtforms.validators import DataRequired
 
-class PlayerForm(Form):
-    players = SelectMultipleField('Players', choices=[])
+class GameForm(Form):
+    players = SelectMultipleField(
+        'Players', 
+        choices=[], 
+        validators=[DataRequired()]
+    )
+    merlin = BooleanField('merlin?', default=False)
