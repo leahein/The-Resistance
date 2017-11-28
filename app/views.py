@@ -1,9 +1,13 @@
 from flask import render_template
 
 from app import app
-from .services.google_sheet import GoogleSpreadsheet
 from . import config
 from .forms import GameForm
+
+from .services.google_sheet import GoogleSpreadsheet
+from .services.game import Game
+from .services import constants
+from .services.sns import SNS
 
 import pdb
 
@@ -25,4 +29,20 @@ def new():
 def create():
     form = GameForm()
     if form.validate_on_submit():
-        pdb.set_trace()
+        game = Game(
+            id=,
+            player_names=form.players, 
+            with_merlin=form.with_merlin,
+        )
+        sns = SNS(config.SNS_CLIENT)
+        for player in game.resistance:
+            sns.send(
+                phone=player.phone, 
+                message=(constants.MERLIN_MESSAGE 
+                         if player.is_merlin else 
+                         constants.RESISTANCE_MESSAGE)
+        for player in game.spies:
+            sns.send(
+                phone=player.phone, 
+                message=constants.SPY_MESSAGE 
+            )

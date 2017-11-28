@@ -8,4 +8,4 @@ class GameForm(Form):
         choices=[], 
         validators=[DataRequired()]
     )
-    merlin = BooleanField('merlin?', default=False)
+    with_merlin = BooleanField('merlin?', default=False)
