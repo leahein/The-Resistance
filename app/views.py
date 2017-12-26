@@ -1,8 +1,30 @@
-from flask import render_template
+from flask import render_template, request
 
 from app import app
 from . import config
 from .forms import GameForm
+import random
+
+import yaml
+import json
+
+from .services.game import (
+    Game,
+    inform_players,
+    get_the_rules,
+)
+from .config import (
+    GS_CLIENT,
+    GS_BOOK_CODE,
+    SNS_CLIENT,
+    GAME_RULES,
+)
+from .services import constants
+
+from .services.sns import SNS
+
+from .services.configurations import extract_data_from_google_sheet
+
 
 from .services.google_sheet import GoogleSpreadsheet
 from .services.game import Game
@@ -25,24 +47,25 @@ def new():
     ]
     return render_template('game/new.html', form=form)
 
+
 @app.route('/game', methods=['POST'])
 def create():
-    form = GameForm()
-    if form.validate_on_submit():
-        game = Game(
-            id=,
-            player_names=form.players,
-            with_merlin=form.with_merlin,
-        )
-        sns = SNS(config.SNS_CLIENT)
-        for player in game.resistance:
-            sns.send(
-                phone=player.phone,
-                message=(constants.MERLIN_MESSAGE
-                         if player.is_merlin else
-                         constants.RESISTANCE_MESSAGE)
-        for player in game.spies:
-            sns.send(
-                phone=player.phone,
-                message=constants.SPY_MESSAGE
-            )
+    response_received =request.form.getlist('players')
+    with_merlin = request.form.get('merlin')
+
+    google_sheet_data = extract_data_from_google_sheet(
+        GS_BOOK_CODE,
+        GS_CLIENT,
+    )
+
+    sns = SNS(SNS_CLIENT)
+    playing_players = list(filter(lambda t: t[1] in response_received, google_sheet_data))
+    game = Game(
+        playing_players,
+        True if with_merlin else False
+    )
+    inform_players(game, sns)
+    starting_person = f'You will start {random.choice(playing_players).name}'
+    rules = f'Mission size: {get_the_rules(len(playing_players), GAME_RULES)}'
+
+    return json.dumps((starting_person, rules))
