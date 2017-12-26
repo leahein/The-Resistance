@@ -7,19 +7,21 @@
   <body background="/static/background.png" style="background-repeat:no-repeat; background-size:cover">
     <div align="center" style="padding-top:200px">
       <form action={{ url_for('create') }} method="post" name="create">
-            {{ form.hidden_tag() }}
-            <div class="mdl-selectfield mdl-js-selectfield">
-            {{ form.players(size=20, minlength=50, width=25, style="color:red; font-size:20px",class="mdl-selectfield__select") }}
-            </div>
-            <p style="color:#ce1e0e; font-size:20px">
-              </br>
-              <strong>PLAY WITH MERLIN?</strong>
-              {{ form.merlin(class="mdl-switch mdl-js-switch mdl-js-ripple-effect") }}
-              </p>
-              </br></br>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-                READY TO PLAY!!
-            </button>
+          {{ form.hidden_tag() }}
+          <div class="mdl-selectfield mdl-js-selectfield">
+            <textarea rows={{ len(form.players) }}>
+              {{ form.players(size=20, style="color:red; font-size:20px", class="mdl-selectfield__select") }}
+            </textarea>
+          </div>
+          <p style="color:#ce1e0e; font-size:20px">
+            </br>
+            <strong>PLAY WITH MERLIN?</strong>
+            {{ form.merlin(class="mdl-switch mdl-js-switch mdl-js-ripple-effect") }}
+            </p>
+            </br></br>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+              READY TO PLAY!!
+          </button>
       </form>
     </div>
   </body>

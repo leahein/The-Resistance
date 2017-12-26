@@ -1,38 +1,27 @@
-from typing import List, FrozenSet, Dict, NamedTuple, Optional
-import random
-from collections import namedtuple
+'''Main logic for the resistance game role assignment'''
 
-import yaml
+from typing import List, Optional # pylint: disable=unused-import
+import random
 
 from . import constants
-from .containers import Playerinfo
-
-class PlayerInfo(NamedTuple):
-    pass
-
-class Player(NamedTuple):
-    '''Container representing a player in the game'''
-
-    Playerinfo: NamedTuple
-    game: 'Game'
-    team: str
-    is_merlin: bool = False
+from .containers import PlayerInfo, Player
+from .sns import SNS
 
 class Game:
 
     def __init__(
             self,
-            players: List[Playerinfo],
+            players: List[PlayerInfo],
             with_merlin: bool = False
     ) -> None:
-        self.player_info = random.sample(players, k=len(players))
+        self.players_info = random.sample(players, k=len(players))
         self._spies = None # type: Optional[List[Player]]
         self._resistance = None # type: Optional[List[Player]]
         self.with_merlin = with_merlin
 
     @property
     def n_players(self) -> int:
-        return len(self.player_info)
+        return len(self.players_info)
 
     @property
     def n_spies(self) -> int:
@@ -40,27 +29,19 @@ class Game:
         third = int(self.n_players / 3)
         return int(third + 1) if self.n_players % 3 else third
 
-    def team_names(self) -> FrozenSet[str]:
-        return constants.TEAM_NAMES
-
-    @property
-    def players(self) -> List[Player]:
-        return [*self.spies, *self.resistance]
-
     @property
     def resistance(self) -> List[Player]:
         if self._resistance is None:
             resistance = [
                 Player(
-                    Playerinfo=name,
-                    game=self,
+                    Playerinfo=player_info,
                     team=constants.RESISTANCE,
                     is_merlin=False
                     )
-                for name in self.player_info[self.n_spies:-1]
+                for player_info in self.players_info[self.n_spies:-1]
             ]
             merlin = [Player(
-                Playerinfo=self.player_info[-1],
+                Playerinfo=self.players_info[-1],
                 game=self,
                 team=constants.RESISTANCE,
                 is_merlin=self.with_merlin
@@ -78,13 +59,12 @@ class Game:
                     team=constants.SPIES,
                     is_merlin=False
                 )
-                for name in self.player_info[0: self.n_spies]
+                for name in self.players_info[0: self.n_spies]
             ]
         return self._spies
 
-def inform_players(game: Game, sns)-> None:
-    """sends sms and informs the players about their team
-    """
+def inform_players(game: Game, sns: SNS)-> None:
+    """sends sms and informs the players about their team"""
 
     spies = game.spies
     resistance = game.resistance
@@ -92,8 +72,10 @@ def inform_players(game: Game, sns)-> None:
     spy_names = ', '.join(player.Playerinfo.name for player in spies)
 
     for player in resistance:
-        message = constants.MERLIN_MESSAGE + (spy_names)\
-            if player.is_merlin else constants.RESISTANCE_MESSAGE
+        message = (
+            constants.MERLIN_MESSAGE + (spy_names) if player.is_merlin else
+            constants.RESISTANCE_MESSAGE
+        )
         sns.send(
             phone=player.Playerinfo.phone,
             message=message
@@ -104,22 +86,3 @@ def inform_players(game: Game, sns)-> None:
             phone=spy.Playerinfo.phone,
             message=constants.SPY_MESSAGE + spy_names
         )
-
-
-def get_the_rules(
-        number_of_players: int,
-        game_rules_book: str
-) -> str:
-    """Gets the rules as in the number of players needed to play in every
-    round based on the number of players playing
-
-    :param playing_players the number of players playing
-    """
-
-    with open (game_rules_book, 'r') as file_obj:
-        rules = yaml.load(file_obj)
-
-        if number_of_players > 10:
-            return rules[10]
-
-        return rules[number_of_players]

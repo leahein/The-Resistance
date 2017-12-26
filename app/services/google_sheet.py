@@ -7,7 +7,6 @@ import gspread  # type: ignore
 from gspread.models import Spreadsheet, Worksheet  # type: ignore
 from gspread.client import Client  # type: ignore # pylint: disable=unused-import
 from oauth2client.service_account import ServiceAccountCredentials # type: ignore
-from oauth2client.crypt import Signer  # type: ignore
 
 SCOPES = ['https://spreadsheets.google.com/feeds']
 
@@ -41,13 +40,7 @@ class GoogleSpreadsheet:
         return self.workbook.worksheet(sheet_name)
 
     def get_worksheet_data(self, sheet_name: str) -> List[Dict[str, Any]]:
-        '''Obtain all data from a google workbook worksheet
-
-        Cleans records to ensure that:
-            * blank rows are removed
-            * Cells associated with a blank header are removed
-            * blank cells are removed
-        '''
+        '''Obtain all data from a google workbook worksheet '''
         try:
             worksheet = self.get_worksheet_by_name(sheet_name)
             worksheet_raw = worksheet.get_all_records(default_blank=None)

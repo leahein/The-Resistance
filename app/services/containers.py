@@ -1,23 +1,14 @@
-"""Containers: to store data from the google sheet in the organised way
-"""
+"""Containers: to store data from the google sheet in the organised way"""
 
-from collections import namedtuple, OrderedDict
-from typing import Dict, Any
+from typing import NamedTuple
 
-GoogleSheetHeader = OrderedDict([
-    ('name', 'Name'),
-    ('phone', 'Phone'),
-])
+class PlayerInfo(NamedTuple):
+    name: str
+    phone: int
 
-Playerinfo = namedtuple('Playerinfo', 'name, phone')
+class Player(NamedTuple):
+    '''Container representing a player in the game'''
 
-
-def google_sheet_data(
-        fields: Dict[str, Any]
-) -> Playerinfo:
-    """Retrieves data from google sheet
-    """
-    return Playerinfo(
-        name=fields[GoogleSheetHeader['name']],
-        phone=str(fields[GoogleSheetHeader['phone']]),
-    )
+    Playerinfo: PlayerInfo
+    team: str
+    is_merlin: bool = False
