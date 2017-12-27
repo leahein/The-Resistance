@@ -9,9 +9,7 @@
       <form action={{ url_for('create') }} method="post" name="create">
           {{ form.hidden_tag() }}
           <div class="mdl-selectfield mdl-js-selectfield">
-            <textarea rows={{ len(form.players) }}>
               {{ form.players(size=20, style="color:red; font-size:20px", class="mdl-selectfield__select") }}
-            </textarea>
           </div>
           <p style="color:#ce1e0e; font-size:20px">
             </br>
@@ -20,7 +18,7 @@
             </p>
             </br></br>
           <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
-              READY TO PLAY!!
+            READY TO PLAY>>
           </button>
       </form>
     </div>

@@ -42,7 +42,6 @@ class Game:
             ]
             merlin = [Player(
                 Playerinfo=self.players_info[-1],
-                game=self,
                 team=constants.RESISTANCE,
                 is_merlin=self.with_merlin
             )]
@@ -55,7 +54,6 @@ class Game:
             self._spies = [
                 Player(
                     Playerinfo=name,
-                    game=self,
                     team=constants.SPIES,
                     is_merlin=False
                 )

@@ -16,3 +16,7 @@ MERLIN_MESSAGE = (
     'Not only are you a RESISTANCE member, you\'re also '
     'MERLIN.  The spies are as follows: \n'
 )
+
+# Google Sheet Headers
+NAME = 'Name'
+PHONE = 'Phone'

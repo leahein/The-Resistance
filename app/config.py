@@ -15,7 +15,7 @@ PATH_SECURE = os.path.join(PATH_INSTANCE, 'secure.yaml')
 PATH_GOOGLE_SHEETS_SECURE = os.path.join(PATH_INSTANCE, 'google_sheets.json')
 
 PATH_YAML = os.path.join(PATH_ROOT, 'yaml')
-GAME_RULES = os.path.join(PATH_YAML, 'game_rules.yaml')
+PATH_GAME_RULES = os.path.join(PATH_YAML, 'game_rules.yaml')
 
 ######################################################################
 # Secure Credentials
@@ -24,8 +24,8 @@ GAME_RULES = os.path.join(PATH_YAML, 'game_rules.yaml')
 with open(PATH_SECURE, 'r') as PATH_SECURE_FILE_OBJ:
     SECURE_CONFIG = yaml.load(PATH_SECURE_FILE_OBJ.read())
 
-with open(GAME_RULES, 'r') as FILE_OBJ:
-    RULES = yaml.load(FILE_OBJ)
+with open(PATH_GAME_RULES, 'r') as FILE_OBJ:
+    GAME_RULES = yaml.load(FILE_OBJ)
 
 AWS = SECURE_CONFIG['aws']
 GS_BOOK_CODE = SECURE_CONFIG['google_sheet']['book_code']

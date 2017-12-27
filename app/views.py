@@ -12,6 +12,7 @@ from .config import (
     GAME_RULES,
 )
 
+from .services import constants
 from .services.google_sheet import GoogleSpreadsheet
 from .services.game import Game, inform_players
 from .services.containers import PlayerInfo
@@ -26,7 +27,7 @@ def new():
     ).get_worksheet_data('kepler')
     form = GameForm()
     form.players.choices = [
-        (player['Phone'], player['Name'])
+        (player[constants.PHONE], player[constants.NAME])
         for player in team_data
     ]
     return render_template('game/new.html', form=form)
@@ -43,8 +44,8 @@ def create():
     ).get_worksheet_data('kepler')
     players_info = [
         PlayerInfo(
-            name=player['name'],
-            phone=player['phone']
+            name=player[constants.NAME],
+            phone=player[constants.PHONE]
         ) for player in team_data
     ]
     playing_players = [
@@ -60,7 +61,7 @@ def create():
         sns=SNS(SNS_CLIENT)
     )
 
-    starting_person = random.choice(playing_players)
+    starting_person = random.choice(playing_players).name
     mission_rules = (
         GAME_RULES[10] if game.n_players > 10 else
         GAME_RULES[game.n_players]
