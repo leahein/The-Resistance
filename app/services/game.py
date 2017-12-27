@@ -1,35 +1,27 @@
-from typing import List, FrozenSet, Dict, NamedTuple, Optional
+'''Main logic for the resistance game role assignment'''
+
+from typing import List, Optional # pylint: disable=unused-import
 import random
 
 from . import constants
-
-class PlayerInfo(NamedTuple):
-    pass
-
-class Player(NamedTuple):
-    '''Container representing a player in the game'''
-
-    name: str
-    game: 'Game'
-    team: str
-    is_merlin: bool = False
+from .containers import PlayerInfo, Player
+from .sns import SNS
 
 class Game:
 
     def __init__(
             self,
-            id: int,
-            player_names: List[str],
-            with_merlin: bool = True
+            players: List[PlayerInfo],
+            with_merlin: bool = False
     ) -> None:
-        self.id = id
-        self.player_names = random.sample(player_names, k=len(player_names))
+        self.players_info = random.sample(players, k=len(players))
         self._spies = None # type: Optional[List[Player]]
         self._resistance = None # type: Optional[List[Player]]
+        self.with_merlin = with_merlin
 
     @property
     def n_players(self) -> int:
-        return len(self.player_names)
+        return len(self.players_info)
 
     @property
     def n_spies(self) -> int:
@@ -37,25 +29,21 @@ class Game:
         third = int(self.n_players / 3)
         return int(third + 1) if self.n_players % 3 else third
 
-    def team_names(self) -> FrozenSet[str]:
-        return constants.TEAM_NAMES
-
-    @property
-    def players(self) -> List[Player]:
-        return [*self.spies, *self.resistance]
-
     @property
     def resistance(self) -> List[Player]:
         if self._resistance is None:
             resistance = [
-                Player(name=name, game=self,team=constants.RESISTANCE, is_merlin=False)
-                for name in self.player_names[self.n_spies:-2]
+                Player(
+                    Playerinfo=player_info,
+                    team=constants.RESISTANCE,
+                    is_merlin=False
+                    )
+                for player_info in self.players_info[self.n_spies:-1]
             ]
             merlin = [Player(
-                name=self.player_names[-1],
-                game=self,
+                Playerinfo=self.players_info[-1],
                 team=constants.RESISTANCE,
-                is_merlin=True
+                is_merlin=self.with_merlin
             )]
             self._resistance = resistance + merlin
         return self._resistance
@@ -64,7 +52,35 @@ class Game:
     def spies(self) -> List[Player]:
         if self._spies is None:
             self._spies = [
-                Player(name=name, game=self, team=constants.SPIES, is_merlin=False)
-                for name in self.player_names[0: self.n_spies]
+                Player(
+                    Playerinfo=name,
+                    team=constants.SPIES,
+                    is_merlin=False
+                )
+                for name in self.players_info[0: self.n_spies]
             ]
         return self._spies
+
+def inform_players(game: Game, sns: SNS)-> None:
+    """sends sms and informs the players about their team"""
+
+    spies = game.spies
+    resistance = game.resistance
+
+    spy_names = ', '.join(player.Playerinfo.name for player in spies)
+
+    for player in resistance:
+        message = (
+            constants.MERLIN_MESSAGE + (spy_names) if player.is_merlin else
+            constants.RESISTANCE_MESSAGE
+        )
+        sns.send(
+            phone=player.Playerinfo.phone,
+            message=message
+        )
+
+    for spy in spies:
+        sns.send(
+            phone=spy.Playerinfo.phone,
+            message=constants.SPY_MESSAGE + spy_names
+        )

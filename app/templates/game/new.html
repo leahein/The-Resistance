@@ -1,13 +1,26 @@
 <html>
   <head>
-    <title>game</title>
-      <form action={{ url_for('create') }} method="post" name="create">
-            {{ form.hidden_tag() }}
-            <div>
-              {{ form.players }}
-              {{ form.merlin }}
-              </div>
-            <p><input type="submit" value="Start Game!"></p>
-        </form>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.red-deep_orange.min.css">
+    <title>Resistance & Spies</title>
   </head>
+  <body background="/static/background.png" style="background-repeat:no-repeat; background-size:cover">
+    <div align="center" style="padding-top:200px">
+      <form action={{ url_for('create') }} method="post" name="create">
+          {{ form.hidden_tag() }}
+          <div class="mdl-selectfield mdl-js-selectfield">
+              {{ form.players(size=20, style="color:red; font-size:20px", class="mdl-selectfield__select") }}
+          </div>
+          <p style="color:#ce1e0e; font-size:20px">
+            </br>
+            <strong>PLAY WITH MERLIN?</strong>
+            {{ form.merlin(class="mdl-switch mdl-js-switch mdl-js-ripple-effect") }}
+            </p>
+            </br></br>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored">
+            READY TO PLAY>>
+          </button>
+      </form>
+    </div>
+  </body>
 </html>

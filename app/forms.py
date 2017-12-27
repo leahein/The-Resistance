@@ -4,8 +4,8 @@ from wtforms.validators import DataRequired
 
 class GameForm(Form):
     players = SelectMultipleField(
-        'Players', 
-        choices=[], 
+        'Players',
+        choices=[],
         validators=[DataRequired()]
     )
-    with_merlin = BooleanField('merlin?', default=False)
+    merlin = BooleanField('merlin?', default=False)

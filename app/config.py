@@ -12,7 +12,10 @@ PATH_ROOT = os.path.dirname(os.path.abspath(__file__))
 PATH_INSTANCE = os.path.join(PATH_ROOT, 'instance')
 
 PATH_SECURE = os.path.join(PATH_INSTANCE, 'secure.yaml')
-PATH_GOOGLE_SHEETS_SECURE = os.path.join(PATH_INSTANCE, 'google-sheets.json')
+PATH_GOOGLE_SHEETS_SECURE = os.path.join(PATH_INSTANCE, 'google_sheets.json')
+
+PATH_YAML = os.path.join(PATH_ROOT, 'yaml')
+PATH_GAME_RULES = os.path.join(PATH_YAML, 'game_rules.yaml')
 
 ######################################################################
 # Secure Credentials
@@ -20,6 +23,9 @@ PATH_GOOGLE_SHEETS_SECURE = os.path.join(PATH_INSTANCE, 'google-sheets.json')
 
 with open(PATH_SECURE, 'r') as PATH_SECURE_FILE_OBJ:
     SECURE_CONFIG = yaml.load(PATH_SECURE_FILE_OBJ.read())
+
+with open(PATH_GAME_RULES, 'r') as FILE_OBJ:
+    GAME_RULES = yaml.load(FILE_OBJ)
 
 AWS = SECURE_CONFIG['aws']
 GS_BOOK_CODE = SECURE_CONFIG['google_sheet']['book_code']
@@ -29,4 +35,4 @@ GS_BOOK_CODE = SECURE_CONFIG['google_sheet']['book_code']
 ######################################################################
 
 GS_CLIENT = google_sheet_client(PATH_GOOGLE_SHEETS_SECURE)
-SNS_CLIENT = boto3.client(**AWS)
+SNS_CLIENT = boto3.client(service_name='sns')
