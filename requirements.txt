@@ -2,7 +2,7 @@ boto3==1.4.8
 botocore==1.8.2
 certifi==2017.11.5
 docutils==0.14
-Flask==0.12.2
+Flask==1.0
 gspread==0.6.2
 Jinja2==2.10
 MarkupSafe==1.0
